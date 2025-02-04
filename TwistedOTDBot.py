@@ -1,6 +1,7 @@
-import discord
 from discord.utils import sleep_until
 from TaskManager import TaskManager
+import discord
+import logging
 import sys
 
 
@@ -43,14 +44,19 @@ class TwistedOTDBot(discord.ext.commands.Bot):
         
 
 if __name__ == '__main__':
+    
     intents_dict = {
         'messages': True,
         'message_content': True,
         'guilds': True
     }
+    
     discord_key_path = sys.argv[1]
     with open(discord_key_path) as f:
         discord_key = f.read()
+        
+    logging_handler = logging.FileHandler(filename='logs/discord.log',
+                                          encoding='utf-8', mode='w')
     intents = discord.Intents(**intents_dict)
     client = TwistedOTDBot(intents=intents)
-    client.run(discord_key)
+    client.run(discord_key, log_handler=logging_handler)
