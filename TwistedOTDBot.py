@@ -1,4 +1,3 @@
-from discord.utils import sleep_until
 from TaskManager import TaskManager
 import discord
 import logging
@@ -7,7 +6,7 @@ import sys
 
 class TwistedOTDBot(discord.ext.commands.Bot):
 
-    def __init__(self, command_prefix='!TOTD', **kwargs):
+    def __init__(self, command_prefix='$', **kwargs):
         super().__init__(command_prefix, **kwargs)
                 
         self.channel_name = 'twisted-board'
@@ -25,22 +24,11 @@ class TwistedOTDBot(discord.ext.commands.Bot):
         
     async def send_message(self, message):
         ''''''
-        for i, channel in enumerate(self.guilds[0].text_channels):
+        for channel in self.guilds[0].text_channels:
             if channel.name == 'twisted-board':
                 print("Sending Twisted Board update!")
                 await channel.send(message)
-        
-        
-    async def on_guild_join(self, guild):
-        ''''''
-        self.discord_server = guild
-        for i, channel in enumerate(guild.text_channels):
-            if channel.name == 'twisted-board':
-                self.channel_id = i
-                self.channel = channel
-                print("Server connected: Channel recognized!")
-                await self.channel.send("Server connected: Channel recognized!")
-        
+                
         
 
 if __name__ == '__main__':

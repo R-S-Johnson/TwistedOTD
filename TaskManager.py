@@ -6,7 +6,9 @@ from TwsistedGrabber import GrabTwisted
 
 class TaskManager(commands.Cog):
 
-    def __init__(self, parent_bot):
+    def __init__(self, parent_bot, **kwargs):
+        super().__init__(**kwargs)
+        
         self.parent_bot = parent_bot
         
         self.task = self.get_twisted.start()
@@ -18,7 +20,7 @@ class TaskManager(commands.Cog):
     
     @tasks.loop(time=time(hour=19, minute=5, tzinfo=timezone("US/Eastern")))
     async def get_twisted(self):
-        print("7pm! time to update the board!")
+        print("Time to update the board!")
 
         twisted_message = GrabTwisted()     
 
