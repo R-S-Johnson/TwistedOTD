@@ -1,10 +1,13 @@
-from TaskManager import TaskManager
-import discord
+from TwsistedGrabber import GrabTwisted
+from discord import Intents
+from discord.ext import commands, tasks
+from datetime import time
+from pytz import timezone
 import logging
 import sys
 
 
-class TwistedOTDBot(discord.ext.commands.Bot):
+class TwistedOTDBot(commands.Bot):
 
     def __init__(self, command_prefix='$', **kwargs):
         super().__init__(command_prefix, **kwargs)
@@ -17,9 +20,7 @@ class TwistedOTDBot(discord.ext.commands.Bot):
     
     async def on_ready(self):
         ''''''
-        task_manager = TaskManager(self)
-        await self.add_cog(task_manager)
-        print("Twisted OTD Bot (with cog) is running and ready!!")
+        print("Twisted OTD Bot is running and ready!!")
     
         
     async def send_message(self, message):
@@ -29,7 +30,17 @@ class TwistedOTDBot(discord.ext.commands.Bot):
                 print("Sending Twisted Board update!")
                 await channel.send(message)
                 
+                
+    @tasks.loop(time=time(hour=19, minute=5, tzinfo=timezone("US/Eastern")))
+    async def get_twisted(self):
+        print("Time to update the board!")
+
+        twisted_message = GrabTwisted()     
+
+        print(twisted_message)
+        await self.parent_bot.send_message(twisted_message)
         
+
 
 if __name__ == '__main__':
     
@@ -45,6 +56,6 @@ if __name__ == '__main__':
         
     logging_handler = logging.FileHandler(filename='logs/discord.log',
                                           encoding='utf-8', mode='w')
-    intents = discord.Intents(**intents_dict)
+    intents = Intents(**intents_dict)
     client = TwistedOTDBot(intents=intents)
     client.run(discord_key, log_handler=logging_handler)
