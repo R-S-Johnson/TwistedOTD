@@ -38,6 +38,16 @@ class TwistedOTDBot(commands.Bot):
                 channel = guild.get_channel(channel_id)
 
                 await channel.send(message)
+                
+    
+    async def on_guild_unavailable(self, guild: discord.guild):
+        ''''''
+        self.data_manager.remove_data(guild.id)
+        
+        
+    async def on_guild_remove(self, guild: discord.guild):
+        ''''''
+        self.data_manager.remove_data(guild.id)
 
 
 
