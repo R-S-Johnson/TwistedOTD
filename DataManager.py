@@ -18,8 +18,21 @@ class DataManager:
         return {int(k): v for k, v in data.items()}
     
     
-    def update_data(self, key, value):
+    def update_data(self, key: int, value: int):
         data = self.get_data()
         data[str(key)] = value
         with open(self.file_path, 'w') as f:
             json.dump(data, f, indent=4)
+            
+            
+    def remove_data(self, key: int):
+        '''
+        Returns False if key error, True otherwise
+        '''
+        data = self.get_data()
+        if key in data.keys():
+            del data[key]
+            with open(self.file_path, 'w') as f:
+                json.dump(data, f, indent=4)
+            return True
+        return False
